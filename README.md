@@ -43,6 +43,14 @@ To share your docker image to the Docker Hub Registry or any other registry, pub
 docker image push <yourtag>:latest
 ```
 
+## Running your docker image
+To run your docker image locally, run the following command:
+```
+docker run -p 8080:3000 <yourtag>:latest
+```
+You can then access the application by opening your browser at http://localhost:8080
+
+
 ## License
 
 This library is licensed under [the MIT-0 License](https://github.com/aws/mit-0).
