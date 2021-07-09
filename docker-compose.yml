@@ -1,0 +1,7 @@
+version: "3"
+services:
+  clustersampleapp:
+    image: cluster-sample-app:latest
+    # image: xxx.registry.io/cluster-sample-app:latest
+    ports:
+      - 8080:3000

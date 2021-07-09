@@ -1,0 +1,36 @@
+{
+  "name": "cluster-sample-app",
+  "version": "1.0.0",
+  "description": "A basic app to be used as a demo when testing clustered deployments.",
+  "main": "src/app.js",
+  "dependencies": {
+    "chai": "^4.2.0",
+    "chai-http": "^4.3.0",
+    "express": "^4.17.1",
+    "express-generator": "^4.16.1",
+    "mocha": "^8.2.0",
+    "npm": "^7.6.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "mocha",
+    "start": "node src/app.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jeanbaptisteguillois/cluster-sample-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/jeanbaptisteguillois/cluster-sample-app/issues"
+  },
+  "keywords": [
+    "node",
+    "aws",
+    "docker",
+    "ecs",
+    "eks"
+  ],
+  "homepage": "https://github.com/jeanbaptisteguillois/cluster-sample-app/#readme",
+  "author": "Jean-Baptiste Guillois (AWS)",
+  "license": "MIT-0"
+}
