@@ -1,5 +1,5 @@
 /*
-** Cluster Sample Application - https://github.com/jbguillois/cluster-sample-app
+** Cluster Sample Application - https://github.com/aws-samples/cluster-sample-app
 © 2021 Amazon Web Services, Inc. or its affiliates. All Rights Reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
