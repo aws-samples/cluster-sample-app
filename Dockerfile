@@ -8,7 +8,6 @@ RUN yum install -y tar gzip
 ### Install NVM
 RUN mkdir /usr/local/nvm
 ENV NVM_DIR /usr/local/nvm
-# ENV NODE_VERSION 4.4.7
 ENV NODE_VERSION 14.17.3
 
 RUN curl -s -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.34.0/install.sh | bash
@@ -20,14 +19,6 @@ RUN source $NVM_DIR/nvm.sh \
 # add node and npm to path so the commands are available
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
-
-# confirm installation
-RUN echo $NODE_PATH
-RUN node -v
-RUN npm -v
-
-#### Print node version
-RUN node -e "console.log('Running Node.js ' + process.version)"
 
 #### Create app directory
 WORKDIR /usr/src/app
