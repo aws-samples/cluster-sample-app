@@ -48,6 +48,11 @@ To run your docker image locally, run the following command:
 ```
 docker run -p 8080:3000 <yourtag>:latest
 ```
+Or using docker compose:
+```
+docker compose up clustersampleapp
+```
+
 You can then access the application by opening your browser at http://localhost:8080
 
 
