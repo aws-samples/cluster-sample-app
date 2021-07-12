@@ -20,6 +20,9 @@ RUN source $NVM_DIR/nvm.sh \
 ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
+# Add app port
+ENV CLUSTER_SAMPLE_APP_PORT 80
+
 #### Create app directory
 WORKDIR /usr/src/app
 
