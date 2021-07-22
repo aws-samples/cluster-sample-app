@@ -3,7 +3,9 @@ FROM amazonlinux
 
 ### Update our image
 RUN yum update -y
-RUN yum install -y tar gzip
+
+### Install tar & gzip
+RUN yum install -y tar gzip shadow-utils
 
 ### Install NVM
 RUN mkdir /usr/local/nvm
@@ -22,6 +24,10 @@ ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
 # Add app port
 ENV CLUSTER_SAMPLE_APP_PORT 80
+
+#### Create dedicated user
+RUN useradd -ms /bin/bash user
+USER user
 
 #### Create app directory
 WORKDIR /usr/src/app
