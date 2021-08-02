@@ -2,7 +2,7 @@ version: "3"
 services:
   clustersampleapp:
     image: cluster-sample-app:latest
-    # image: xxx.registry.io/cluster-sample-app:latest
+    #image: public.ecr.aws/f7s8o2h4/cluster-sample-app:latest
     ports:
-      - 80:80
+      - 8090:8080
 

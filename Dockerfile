@@ -23,7 +23,7 @@ ENV NODE_PATH $NVM_DIR/v$NODE_VERSION/lib/node_modules
 ENV PATH $NVM_DIR/versions/node/v$NODE_VERSION/bin:$PATH
 
 # Add app port
-ENV CLUSTER_SAMPLE_APP_PORT 80
+ENV CLUSTER_SAMPLE_APP_PORT 8080
 
 #### Create dedicated user
 RUN useradd -ms /bin/bash user
@@ -40,5 +40,5 @@ RUN npm install
 
 #### Bundle app source
 COPY . .
-EXPOSE 80
+EXPOSE 8080
 CMD [ "node", "src/app.js" ]

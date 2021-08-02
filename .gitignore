@@ -84,6 +84,7 @@ jspm_packages/
 
 # AWS Copilot files
 copilot/
+.workspace/
 
 # System Files
 .DS_Store

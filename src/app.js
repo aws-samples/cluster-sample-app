@@ -27,6 +27,7 @@ let hitCounter = 1;
 
 var server = app.listen(port, () => {
   console.info("Cluster sample app started...");
+  console.info("Listening on port "+ port);
 });
 
 const dateLocaleOptions = {year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric'};
