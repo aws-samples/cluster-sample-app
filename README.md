@@ -1,7 +1,7 @@
 ## Cluster Sample Application
 [![license](https://img.shields.io/badge/license-MIT-green)](https://github.com/aws-samples/cluster-sample-app/blob/main/LICENSE)
 
-A very basic app written in Javascript and packaged as a Docker image to be used as a demo when testing clustered deployments.
+A very basic web application written in Javascript and packaged as a Docker image to be used as a demo when testing clustered deployments.
 
 The application default page displays current date, time as well as the current IP addresses.
 
@@ -46,14 +46,14 @@ docker image push <yourtag>:latest
 ## Running your docker image
 To run your docker image locally, run the following command:
 ```
-docker run -p 80:80 <yourtag>:latest
+docker run -p 8090:8080 <yourtag>:latest
 ```
 Or using docker compose:
 ```
 docker compose up clustersampleapp
 ```
 
-You can then access the application by opening your browser at http://localhost
+You can then access the application by opening your browser at http://localhost:8090
 
 
 ## License

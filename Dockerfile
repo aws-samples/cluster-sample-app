@@ -40,5 +40,8 @@ RUN npm install
 
 #### Bundle app source
 COPY . .
+
+#### Configure container
 EXPOSE 8080
+HEALTHCHECK CMD curl --fail http://localhost:8080/healthcheck || exit 1
 CMD [ "node", "src/app.js" ]

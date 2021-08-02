@@ -24,6 +24,7 @@ const app = express();
 const port = process.env.CLUSTER_SAMPLE_APP_PORT || 3000;
 
 let hitCounter = 1;
+let healthCheckHitCounter = 1;
 
 var server = app.listen(port, () => {
   console.info("Cluster sample app started...");
@@ -38,9 +39,9 @@ app.get("/", (req, res, next) => {
   let str = `<head><style>${getCSSString()}</style></head>`;
   str = str + '<body>';
   str = str + '<div style="display: inline-block; text-align: center; padding: 20px;"><h1>Greetings from Cluster Sample App!</h1>';
-  str = str + `<h3>Today is ${new Date().toLocaleString(
-  'en-gb', dateLocaleOptions)}`+'</h3>';
+  str = str + `<h3>Today is ${new Date().toLocaleString('en-gb', dateLocaleOptions)}`+'</h3>';
   str = str + `<p>This web page has been hit ${hitCounter} time(s)</p>`;
+  str = str + `<p>The healthcheck of this application has been hit ${healthCheckHitCounter} time(s)</p>`;
 
   str = str + '<div><p>This app is running in a container having the following IP addresses: ';
 
@@ -52,10 +53,18 @@ app.get("/", (req, res, next) => {
   str = str + '</table></p></div></body>';
   res.send(str);
 
-    hitCounter+=1;
+  hitCounter+=1;
 });
 
-function getCSSString() {
+// Implement Healthcheck
+app.get("/healthcheck", (req, res, next) => {
+  console.debug('Processing a GET request on /healthcheck');
+  res.send("OK");
+  healthCheckHitCounter+=1;
+});
+
+
+  function getCSSString() {
   let css = 'body { text-align: center; }';
   css = css + 'table { width: 98%; border: 1px solid black; }';
   css = css + 'th { background-color: #f7a105; color: white; }';
