@@ -1,4 +1,4 @@
-name: Cluster Sample App CI
+name: Build
 
 on:
   push:
