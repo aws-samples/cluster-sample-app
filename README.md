@@ -1,6 +1,6 @@
-## Cluster Sample Application
+![Continuous Integration](https://github.com/aws-samples/cluster-sample-app/actions/workflows/ci.yml/badge.svg)
 [![license](https://img.shields.io/badge/license-MIT-green)](https://github.com/aws-samples/cluster-sample-app/blob/main/LICENSE)
-
+## Cluster Sample Application
 A very basic web application written in Javascript and packaged as a Docker image to be used as a demo when testing clustered deployments.
 
 The application default page displays current date, time as well as the current IP addresses.
