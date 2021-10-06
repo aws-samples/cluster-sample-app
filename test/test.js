@@ -21,7 +21,7 @@ let chaiHttp = require('chai-http');
 
 chai.use(chaiHttp);
 
-describe('Testing sample app default page', () => {
+describe('Testing sample app', () => {
   var server;
   beforeEach(function () {
     server = require('../src/app');
@@ -30,13 +30,24 @@ describe('Testing sample app default page', () => {
     server.close();
   });
 
-  it('Testing sample app default page', (done) => {
+  it('Testing default page', (done) => {
     chai.request(server)
         .get('/')
         .end((err, res) => {
             chai.expect(res).to.have.status(200);
+            chai.expect(res.text).to.contain('Greetings from Cluster Sample App!');
           done();
         });
   });
-});
 
+  it('Testing healthcheck', (done) => {
+    chai.request(server)
+        .get('/healthcheck')
+        .end((err, res) => {
+            chai.expect(res).to.have.status(200);
+            chai.expect(res.text).to.equal('OK');
+          done();
+        });
+  });
+
+});
