@@ -20,7 +20,7 @@ jobs:
           load: true      
       - uses: anchore/scan-action@v3
         with:
-          id: scan
+          fail-build: false
           image: "cluster-sample-app:latest"
           acs-report-enable: true
       - name: upload Anchore scan SARIF report
