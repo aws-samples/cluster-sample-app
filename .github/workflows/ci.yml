@@ -12,6 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: hadolint/hadolint-action@v1.6.0
+      - uses: actions/checkout@v2
       - name: Run hadolint
         run: hadolint Dockerfile
 
