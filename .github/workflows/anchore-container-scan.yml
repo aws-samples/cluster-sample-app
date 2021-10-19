@@ -19,6 +19,7 @@ jobs:
           push: false
           load: true      
       - uses: anchore/scan-action@v3
+        id: scan
         with:
           fail-build: false
           image: "cluster-sample-app:latest"
