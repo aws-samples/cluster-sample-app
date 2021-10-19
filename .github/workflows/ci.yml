@@ -13,8 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: hadolint/hadolint-action@v1.6.0
-      - name: Run hadolint
-        run: hadolint Dockerfile
 
   build:
     needs: ["lint"]
