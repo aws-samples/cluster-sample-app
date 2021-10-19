@@ -7,14 +7,20 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
 
+  lint:
     runs-on: ubuntu-latest
+    steps:
+      - uses: hadolint/hadolint-action@v1.6.0
+      - name: Run hadolint
+        run: hadolint Dockerfile
 
+  build:
+    needs: ["lint"]
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         node-version: [14.x, 15.x]
-
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ matrix.node-version }}
