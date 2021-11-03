@@ -2,10 +2,10 @@
 FROM amazonlinux:2.0.20211005.0
 
 ### Update our image
-RUN yum update -y
+RUN yum update -y && yum clean all
 
 ### Install tar & gzip
-RUN yum install -y tar gzip shadow-utils
+RUN yum install -y tar gzip shadow-utils && yum clean all
 
 ### Install NVM
 RUN mkdir /usr/local/nvm
