@@ -4,15 +4,17 @@
   "description": "A basic app to be used as a demo when testing clustered deployments.",
   "main": "src/app.js",
   "dependencies": {
-    "chai": "^4.2.0",
-    "chai-http": "^4.3.0",
     "express": "^4.17.1",
     "express-generator": "^4.2.0",
-    "mocha": "^8.2.0",
-    "npm": "^7.6.1"
+    "npm": "^7.6.1",
+    "aws-sdk": "2.1058.0"
   },
   "devDependencies": {
-  "ansi-regex": ">=5.0.1"
+    "chai": ">=4.3.0",
+    "chai-http": ">=4.3.0",
+    "ansi-regex": ">=5.0.1",
+    "nanoid": ">=3.1.31",
+    "mocha": ">=8.2.0"
   },
   "scripts": {
     "test": "mocha",
@@ -20,10 +22,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/jeanbaptisteguillois/cluster-sample-app.git"
+    "url": "git+https://github.com/aws-samples/cluster-sample-app.git"
   },
   "bugs": {
-    "url": "https://github.com/jeanbaptisteguillois/cluster-sample-app/issues"
+    "url": "https://github.com/aws-samples/cluster-sample-app/issues"
   },
   "keywords": [
     "node",
