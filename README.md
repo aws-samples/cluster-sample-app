@@ -22,39 +22,35 @@ npm start
 
 You should then be able to access the application by opening 'http://localhost:3000' in your browser 
 
-## Building your docker image
+## Creating your ECR repository
+To create a private repository for your docker image you can take the following steps:
+1. Navigate to your AWS console and open the ECR service console
+2. Click on "Repositories" and "Create repository"
+3. For the repository name, use "cluster-sample-app"
+4. For all others settings, you can use defaults
+5. You can then click on "Create repository"
 
-To build the docker image, go into the root directory of this application and run the following command:
-```
-docker image build .
-```
 
-## Tagging your docker image
+## Connecting to your ECR registry and building/tagging/pushing your docker image
+To login to your registry, take the following steps:
+1. Navigate to your AWS console and open the ECR service console
+2. Select your repository and click "View push commands"
+3. Use the commands listed to build, tag and push your docker image
 
-To tag the docker image you just built, go into the root directory of this application and run the following command:
-```
-docker image build -t <yourtag>:latest .
-```
+## Deploying your application stack
 
-## Publishing your docker image
+To deploy your application stack using the provided CloudFormation template, take the following step:
+1. Navigate to your AWS console and open the CloudFormation service console
+2. Click on "Create stack (with new resources)"
+3. In the template section, click "Upload a template file"
+4. Choose the local file "cluster-sample-app-stack.yml" as the CloudFormation template and click "Next"
+5. Enter a name for your stack
+6. Select two existing subnets (SubnetA and SubnetB) from an existing VPC
+7. Select an existing VPC and click "Next"
+8. Keep all default options and click "Next"
+9. Review all options, acknowledge the creation of IAM resources and click "Create stack"
 
-To share your docker image to the Docker Hub Registry or any other registry, publish the docker image you just tagged, go into the root directory of this application and run the following command:
-```
-docker image push <yourtag>:latest
-```
-
-## Running your docker image
-To run your docker image locally, run the following command:
-```
-docker run -p 8090:8080 <yourtag>:latest
-```
-Or using docker compose:
-```
-docker compose up clustersampleapp
-```
-
-You can then access the application by opening your browser at http://localhost:8090
-
+Once your application stack is deployed, click on the "Output" tab, copy the URL and open it into your browser to access the application.
 
 ## License
 

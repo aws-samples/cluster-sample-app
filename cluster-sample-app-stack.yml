@@ -37,6 +37,7 @@ Parameters:
     Type: Number
     Default: 50
 Resources:
+  # The DynamoDB table storing the state of each node
   ClusterSampleAppNodeTable:
     Type: AWS::DynamoDB::Table
     Properties:
@@ -51,6 +52,7 @@ Resources:
         WriteCapacityUnits: 5
       TableName: "CLUSTER_SAMPLE_APP_NODE"
 
+  # The ECS Cluster
   Cluster:
     Type: AWS::ECS::Cluster
     Properties:
@@ -97,7 +99,6 @@ Resources:
   TaskDefinition:
     Type: AWS::ECS::TaskDefinition
     Properties:
-      # Name of the task definition. Subsequent versions of the task definition are grouped together under this name.
       Family: !Join ['', [!Ref ServiceName, TaskDefinition]]
       # awsvpc is required for Fargate
       NetworkMode: awsvpc
@@ -105,8 +106,8 @@ Resources:
         - FARGATE
       Cpu: 256
       Memory: 0.5GB
-      ExecutionRoleArn: !Ref ExecutionRole
-      TaskRoleArn: !Ref TaskRole
+      ExecutionRoleArn: !GetAtt ExecutionRole.Arn
+      TaskRoleArn: !GetAtt  TaskRole.Arn
       ContainerDefinitions:
         - Name: !Ref ServiceName
           Image: !Ref Image
@@ -170,7 +171,7 @@ Resources:
         MaximumPercent: 200
       DesiredCount: 2
       # This may need to be adjusted if the container takes a while to start up
-      HealthCheckGracePeriodSeconds: 30
+      HealthCheckGracePeriodSeconds: 60
       LaunchType: FARGATE
       NetworkConfiguration: 
         AwsvpcConfiguration:
@@ -189,7 +190,7 @@ Resources:
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      HealthCheckIntervalSeconds: 10
+      HealthCheckIntervalSeconds: 30
       # will look for a 200 status code by default unless specified otherwise
       HealthCheckPath: !Ref HealthCheckPath
       HealthCheckTimeoutSeconds: 5
@@ -243,7 +244,6 @@ Resources:
       ResourceId: !Join ['/', [service, !Ref Cluster, !GetAtt Service.Name]]
       ScalableDimension: ecs:service:DesiredCount
       ServiceNamespace: ecs
-      # "The Amazon Resource Name (ARN) of an AWS Identity and Access Management (IAM) role that allows Application Auto Scaling to modify your scalable target."
       RoleARN: !GetAtt AutoScalingRole.Arn
 
   AutoScalingPolicy:
