@@ -21,7 +21,7 @@ let chaiHttp = require('chai-http');
 
 chai.use(chaiHttp);
 
-describe('Testing sample app', () => {
+describe.skip('Testing sample app', () => {
   var server;
   beforeEach(function () {
     server = require('../src/app');
