@@ -9,11 +9,9 @@ Parameters:
     Type: AWS::EC2::Subnet::Id
   Image:
     Type: String
-    # Update with the Docker image. "You can use images in the Docker Hub registry or specify other repositories (repository-url/image:tag)."
-    Default: public.ecr.aws/f7s8o2h4/cluster-sample-app:2.0
+    # Update with the link to the docker image published in your private ECR"
   ServiceName:
     Type: String
-    # update with the name of the service
     Default: SampleApp
   ContainerPort:
     Type: Number
