@@ -125,23 +125,35 @@ function getHTMLContent(nodes, nodeId) {
   htmlContent = htmlContent + `<p>The healthcheck of this application node has been hit ${healthCheckHitCounter} time(s)</p>`;
 
   htmlContent = htmlContent + `<div><p>This application cluster is made of ${nodes.length} nodes with the following properties:`;
-  // htmlContent = htmlContent + '<table text-align: center; border-style: solid;><th>Name</th><th>Type</th><th>CIDR</th><th>Address</th>';
   htmlContent = htmlContent + '<table text-align: center; border-style: solid;><th>Application Node ID</th><th>#Page Hit</th><th>#Health Check Hit</th><th>IP Addresses</th>';
-
-  nodes.forEach((node) => {
-    const elem = JSON.parse(node.IP_ADDRS);
-    let ipAddrs = '';
-    elem.forEach(ipaddr => {
-      ipAddrs = ipAddrs + `${ipaddr.infos.address}\n`
-    });
-    if(node.NODE_ID === nodeId) {
-      htmlContent = htmlContent + `<tr style="background-color: #3fff00;"><td>${node.NODE_ID} (this node)</td><td>${node.PAGE_HIT_COUNT}</td><td>${node.HEALTHCHECK_HIT_COUNT}</td><td>${ipAddrs}</td></tr>`;
-    } else {
-      htmlContent = htmlContent + `<tr><td>${node.NODE_ID}</td><td>${node.PAGE_HIT_COUNT}</td><td>${node.HEALTHCHECK_HIT_COUNT}</td><td>${ipAddrs}</td></tr>`;  
-    }
-  });
-
+  htmlContent = htmlContent + getAppNodeHTMLString(nodes);
   htmlContent = htmlContent + '</table></p></div></body>';
+
+  return htmlContent;
+}
+
+// ********************************************
+// Returns the HTML table row for each app node
+// ********************************************
+function getAppNodeHTMLString(nodes) {
+  let htmlContent = '';
+  try {
+    nodes.forEach((node) => {
+      const elem = JSON.parse(node.IP_ADDRS);
+      let ipAddrs = '';
+      elem.forEach(ipaddr => {
+        ipAddrs = ipAddrs + `${ipaddr.infos.address}`+'<br/>'
+      });
+      if(node.NODE_ID === nodeId) {
+        htmlContent = htmlContent + `<tr style="background-color: #3fff00;"><td>${node.NODE_ID} (this node)</td><td>${node.PAGE_HIT_COUNT}</td><td>${node.HEALTHCHECK_HIT_COUNT}</td><td>${ipAddrs}</td></tr>`;
+      } else {
+        htmlContent = htmlContent + `<tr><td>${node.NODE_ID}</td><td>${node.PAGE_HIT_COUNT}</td><td>${node.HEALTHCHECK_HIT_COUNT}</td><td>${ipAddrs}</td></tr>`;  
+      }
+    });
+  }
+  catch(error) {
+    htmlContent = `<p>Unable to build node data (${error})</p>`;
+  }
 
   return htmlContent;
 }

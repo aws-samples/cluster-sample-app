@@ -1,5 +1,5 @@
 ### Our base image
-FROM amazonlinux:2.0.20211201.0
+FROM amazonlinux:2.0.20211223.0
 
 ### Update our image
 RUN yum update -y && yum clean all
@@ -10,7 +10,7 @@ RUN yum install -y tar gzip shadow-utils && yum clean all
 ### Install NVM
 RUN mkdir /usr/local/nvm
 ENV NVM_DIR /usr/local/nvm
-ENV NODE_VERSION 14.18.2
+ENV NODE_VERSION 14.18.3
 
 RUN curl -s -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
 RUN source $NVM_DIR/nvm.sh \

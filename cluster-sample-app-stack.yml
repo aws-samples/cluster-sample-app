@@ -57,6 +57,9 @@ Resources:
     Type: AWS::ECS::Cluster
     Properties:
       ClusterName: !Join ['', [!Ref ServiceName, Cluster]]
+      ClusterSettings:
+        - Name: containerInsights
+          Value: enabled
 
   # A role needed by ECS
   ExecutionRole:

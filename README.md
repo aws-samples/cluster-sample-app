@@ -3,26 +3,21 @@
 ## Cluster Sample Application
 A very basic web application written in Javascript and packaged as a Docker image to be used as a demo when testing clustered deployments.
 
-The application default page displays current date, time as well as the current IP addresses.
+The application default page displays current date, time as well as the current IP addresses of the current application node.
+
+## Prerequisites
+
+The following are prequisites:
+- an AWS Account
+- A VPC with two (or more) subnets
 
 Install Node.js and use the following command to install the dependencies:
 ```
 npm install
 ```
 
-To launch the tests, run:
-```
-npm test
-```
-
-To start locally the application, run:
-```
-npm start
-```
-
-You should then be able to access the application by opening 'http://localhost:3000' in your browser 
-
 ## Creating your ECR repository
+
 To create a private repository for your docker image you can take the following steps:
 1. Navigate to your AWS console and open the ECR service console
 2. Click on "Repositories" and "Create repository"
@@ -31,8 +26,9 @@ To create a private repository for your docker image you can take the following 
 5. You can then click on "Create repository"
 
 
-## Connecting to your ECR registry and building/tagging/pushing your docker image
-To login to your registry, take the following steps:
+## Building, tagging and pushing your docker image to your ECR repository
+
+To build, tag and push your docker image, take the following steps:
 1. Navigate to your AWS console and open the ECR service console
 2. Select your repository and click "View push commands"
 3. Use the commands listed to build, tag and push your docker image
