@@ -82,10 +82,6 @@ jspm_packages/
 # next.js build output
 .next
 
-# AWS Copilot files
-copilot/
-.workspace/
-
 # System Files
 .DS_Store
 Thumbs.db

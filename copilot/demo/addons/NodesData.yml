@@ -1,0 +1,48 @@
+Parameters:
+  App:
+    Type: String
+    Description: Your application's name.
+  Env:
+    Type: String
+    Description: The environment name your service, job, or workflow is being deployed to.
+  Name:
+    Type: String
+    Description: The name of the service, job, or workflow being deployed.
+Resources:
+  NodesData:
+    Metadata:
+      'aws:copilot:description': 'An Amazon DynamoDB table for NodesData'
+    Type: AWS::DynamoDB::Table
+    Properties:
+      TableName: CLUSTER_SAMPLE_APP_NODE
+      AttributeDefinitions:
+        - AttributeName: NODE_ID
+          AttributeType: "S"
+      BillingMode: PAY_PER_REQUEST
+      KeySchema:
+        - AttributeName: NODE_ID
+          KeyType: HASH
+
+  NodesDataAccessPolicy:
+    Metadata:
+      'aws:copilot:description': 'An IAM ManagedPolicy for your service to access the NodesData db'
+    Type: AWS::IAM::ManagedPolicy
+    Properties:
+      Description: !Sub
+        - Grants CRUD access to the Dynamo DB table ${Table}
+        - { Table: !Ref NodesData }
+      PolicyDocument:
+        Version: 2012-10-17
+        Statement:
+          - Sid: DDBActions
+            Effect: Allow
+            Action:
+              - dynamodb:Scan
+              - dynamodb:UpdateItem
+              - dynamodb:DeleteItem
+              - dynamodb:PutItem
+            Resource: !Sub ${ NodesData.Arn}
+Outputs:
+  MyTableAccessPolicyArn:
+    Description: "The ARN of the ManagedPolicy to attach to the task role."
+    Value: !Ref NodesDataAccessPolicy
