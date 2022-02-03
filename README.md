@@ -5,11 +5,22 @@ A very basic web application written in Javascript and packaged as a Docker imag
 
 The application default page displays current date, time as well as the current IP addresses of the current application node.
 
+## Preliminary comments
+
+This demo application is not production ready. It is only intended for demo and learning purposes.
+
+The Application Load Balancer created by the CloudFormation template is externally facing and publicly available without any restrictions.
+
+In order to add HTTPS support to this load balancer, you may take the steps described in the following documentation:
+- https://docs.aws.amazon.com/elasticloadbalancing/latest/application/create-https-listener.html
+
+
 ## Prerequisites
 
 The following are prequisites:
 - an AWS Account
 - A VPC with two (or more) subnets
+- Node.js (v14) with npm installed
 
 Install Node.js and use the following command to install the dependencies:
 ```

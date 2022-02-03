@@ -1,6 +1,6 @@
 /*
 ** Cluster Sample Application - DynamoDB Client - https://github.com/aws-samples/cluster-sample-app 
-© 2021 Amazon Web Services, Inc. or its affiliates. All Rights Reserved.
+© 2022 Amazon Web Services, Inc. or its affiliates. All Rights Reserved.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated
 documentation files (the "Software"), to deal in the Software without restriction, including without limitation
@@ -34,17 +34,22 @@ async function saveNodeData(nodeId, ipv4Addrs, mainPageHitCounter, healthCheckHi
                 'HEALTHCHECK_HIT_COUNT': healthCheckHitCounter.toString(),
             }
         };
-    
-        ddbClient.put(params, function(err, data) {
-            if (err) {
-                console.error("Unable to insert application data in DynamoDB: ", err);
-                reject(err);
-            } else {
-                console.log("Application data successfully inserted in DynamoDB");
-                resolve(data);
-            }
-        });
-    
+
+        // Just for the tests
+        if(process.env.NODE_ENV === 'development') {
+            resolve({});
+        }
+        else {
+            ddbClient.put(params, function(err, data) {
+                if (err) {
+                    console.error("Unable to insert application data in DynamoDB: ", err);
+                    reject(err);
+                } else {
+                    console.log("Application data successfully inserted in DynamoDB");
+                    resolve(data);
+                }
+            });    
+        }
     });
 }
 
@@ -58,15 +63,21 @@ async function cleanUpNodesData(nodeId) {
             }
         };
     
-        ddbClient.delete(params, function(err, data) {
-            if (err) {
-                console.error("Unable to delete application node data", err);
-                reject(err);
-            } else {
-                console.log("Successfully deleted application node data");
-                resolve(data);
-            }
-        });
+        // Just for the tests
+        if(process.env.NODE_ENV === 'development') {
+            resolve({});
+        }
+        else {
+            ddbClient.delete(params, function(err, data) {
+                if (err) {
+                    console.error("Unable to delete application node data", err);
+                    reject(err);
+                } else {
+                    console.log("Successfully deleted application node data");
+                    resolve(data);
+                }
+            });    
+        }
     });
 }
 
@@ -81,15 +92,20 @@ async function getAllNodesData(nodeId) {
             TableName: 'CLUSTER_SAMPLE_APP_NODE'
           };
         
-        ddbClient.scan(params, function(err, data) {
-            if (err) {
-                console.error("Error", err);
-                reject(err);
-            } else {
-                resolve(data.Items);
-            }
-        });
-
+        // Just for the tests
+        if(process.env.NODE_ENV === 'development') {
+            resolve([]);
+        }
+        else {
+            ddbClient.scan(params, function(err, data) {
+                if (err) {
+                    console.error("Unable to get all node data", err);
+                    reject(err);
+                } else {
+                    resolve(data.Items);
+                }
+            });    
+        }
     });
 }
 
@@ -106,16 +122,21 @@ async function updateNodeData(nodeId, mainPageHitCounter, healthCheckHitCounter)
             }
         };
     
-        ddbClient.update(params, function(err, data) {
-            if (err) {
-                console.error("Unable to update application data in DynamoDB: ", err);
-                reject(err);
-            } else {
-                console.log("Application data successfully updated in DynamoDB");
-                resolve(data);
-            }
-        });
-    
+        // Just for the tests
+        if(process.env.NODE_ENV === 'development') {
+            resolve({});
+        }
+        else {
+            ddbClient.update(params, function(err, data) {
+                if (err) {
+                    console.error("Unable to update application data in DynamoDB: ", err);
+                    reject(err);
+                } else {
+                    console.log("Application data successfully updated in DynamoDB");
+                    resolve(data);
+                }
+            });    
+        }
     });
 }
 exports.init = init
