@@ -1,3 +1,0 @@
-src/
-
-(?i).*\.(properties|conf|ini|txt|y(a)?ml)$
