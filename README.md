@@ -19,7 +19,6 @@ In order to add HTTPS support to this load balancer, you may take the steps desc
 
 The following are prequisites:
 - an AWS Account
-- A VPC with two (or more) private subnets split across 2 Availability Zones (AZ)
 - Node.js (v14) with npm installed
 - Docker installed
 
