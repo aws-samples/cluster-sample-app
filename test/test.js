@@ -22,7 +22,7 @@ let chaiHttp = require('chai-http');
 chai.use(chaiHttp);
 
 describe('Testing sample app', () => {
-  var server;
+  let server;
   beforeEach(function () {
     server = require('../src/app');
   });

@@ -34,7 +34,7 @@ let healthCheckHitCounter = 0;
 // ***********************
 // Application initializer
 // ***********************
-var server = app.listen(applicationHttpPort, () => {
+let server = app.listen(applicationHttpPort, () => {
 
   // Get DynamoDB Client
   ddb.init(awsFactory);
