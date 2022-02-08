@@ -44,7 +44,8 @@ To build, tag and push your docker image, take the following steps:
 2. Select your repository and click "View push commands"
 3. Use the commands listed to build, tag and push your docker image
 
-## Deploying your application stack with CloudForamtion
+
+## Deploying your application stack with CloudFormation
 
 To deploy your application stack using the provided CloudFormation template, take the following step:
 1. Navigate to your AWS console and open the CloudFormation service console
@@ -59,43 +60,30 @@ To deploy your application stack using the provided CloudFormation template, tak
 
 Once your application stack is deployed, click on the "Output" tab, copy the URL and open it into your browser to access the application.
 
-## Deploying your application stack with AWS Co-Pilot (Optional)
+## Deploying your application stack with AWS Copilot (Optional)
 
-If you choose to deploy your application using AWS Co-Pilot with the required add-on resources for AWS DynamoDB, take the following steps:
+If you choose to deploy your application using AWS Copilot with the required add-on resources for AWS DynamoDB, take the following steps:
 1. Open a terminal window on your local machine.
 2. Run the following command to clone the repository and navigate to the project root directory:
 
 ```
-git clone https://github.com/aws-samples/cluster-sample-app sample-app && cd sample-app
-
+git clone https://github.com/aws-samples/cluster-sample-app cluster-sample-app && cd cluster-sample-app
 ```
 
-3. Deploy the application with one comman using the following command in the root directory of your project: 
+3. Deploy the application using the following command in the root directory of your project: 
 
 ```
-copilot init --app cluster --name sample-app --type "Load Balanced Web Service" --dockerfile ./Dockerfile --port 8080 --deploy
-
+copilot init --app cluster-sample-app --name demo --type "Load Balanced Web Service" --dockerfile ./Dockerfile --port 8080 --deploy
 ``` 
 
-4. Copy the existing AWS Add-ons directory (./copilot/demo/addons), and paste it under the newly created copilot/sample-app directory (./copilot/sample-app/) to add DynamoDB and the required permissions for the application's storage.
+You should then be able to access the application on the DNS name provided as output.
 
-5. From the the root directory of your project, open the Copilot application manifest file (./copilot/sample-app/manifest.yml) and change the http.healthcheck property to “/healthcheck”
-
-6. Deploy your changes to your test environment using the following command in the root directory of your project:
-
-```
-copilot svc deploy test
-
-```
-
-7. Once testing is complete the application and test environment can be removed with the following command:
+4. Once testing is complete, the application and its resources can be removed with the following command:
 
 ```
 copilot app delete --yes
-
 ```
 
-8. You should then be able to access the application on the DNS name provided as output.
 
 ## License
 
