@@ -68,10 +68,16 @@ function shutdown(signal) {
   ddb.cleanUpNodesData(nodeId).then(() => {
     console.log('Closing server...');
     server.close(() => {
-      console.log('Server closed')
-    })  
+      console.log('Server closed');
+      return;
+    })
   }).catch((error) => {
-    console.error('An error occured while cleaning up application nodes data in DynamoDB: ', error);
+    console.error('An unexpected error occured while cleaning up application nodes data: ', error);
+    console.log('Closing server...');
+    server.close(() => {
+      console.log('Server closed');
+      return;
+    }) 
   });
 }
 

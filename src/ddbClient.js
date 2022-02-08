@@ -42,7 +42,7 @@ async function saveNodeData(nodeId, ipv4Addrs, mainPageHitCounter, healthCheckHi
         else {
             ddbClient.put(params, function(err, data) {
                 if (err) {
-                    console.error("Unable to insert application data in DynamoDB: ", err);
+                    console.error("Unable to insert application data: ", err);
                     reject(err);
                 } else {
                     console.log("Application data successfully inserted in DynamoDB");
@@ -70,7 +70,7 @@ async function cleanUpNodesData(nodeId) {
         else {
             ddbClient.delete(params, function(err, data) {
                 if (err) {
-                    console.error("Unable to delete application node data", err);
+                    console.error("Unable to delete application node data: ", err);
                     reject(err);
                 } else {
                     console.log("Successfully deleted application node data");
@@ -99,7 +99,7 @@ async function getAllNodesData(nodeId) {
         else {
             ddbClient.scan(params, function(err, data) {
                 if (err) {
-                    console.error("Unable to get all node data", err);
+                    console.error("Unable to get all node data: ", err);
                     reject(err);
                 } else {
                     resolve(data.Items);
@@ -129,7 +129,7 @@ async function updateNodeData(nodeId, mainPageHitCounter, healthCheckHitCounter)
         else {
             ddbClient.update(params, function(err, data) {
                 if (err) {
-                    console.error("Unable to update application data in DynamoDB: ", err);
+                    console.error("Unable to update application data: ", err);
                     reject(err);
                 } else {
                     console.log("Application data successfully updated in DynamoDB");
