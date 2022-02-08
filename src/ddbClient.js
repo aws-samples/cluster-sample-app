@@ -16,7 +16,7 @@ COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER I
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-var ddbClient = undefined;
+let ddbClient = undefined;
 
 function init(awsFactory) {
     ddbClient = new awsFactory.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
