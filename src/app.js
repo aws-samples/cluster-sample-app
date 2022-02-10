@@ -17,11 +17,13 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR TH
 */
 
 const express = require("express");
+const fs = require('fs');
 const { networkInterfaces } = require('os');
 const awsFactory = require('aws-sdk');
 const ddb = require('./ddbClient.js');
 
 let nodeId = undefined;
+let homePageTemplate = undefined;
 const app = express();
 const applicationHttpPort = process.env.CLUSTER_SAMPLE_APP_PORT || 3000;
 const currentAWSRegion = process.env.AWS_REGION || 'eu-west-3'
@@ -35,6 +37,14 @@ let healthCheckHitCounter = 0;
 // Application initializer
 // ***********************
 let server = app.listen(applicationHttpPort, () => {
+
+  // Load home page template
+  try {
+    homePageTemplate = fs.readFileSync('./home.html', 'utf8')
+  } catch (err) {
+    homePageTemplate = `<p>Unable to load page template</p><p>${error}</p>`;
+    console.error(err);
+  }
 
   // Get DynamoDB Client
   ddb.init(awsFactory);
@@ -63,22 +73,23 @@ process.on('SIGINT', shutdown);
 // ***********************
 // Server shutdown handler
 // ***********************
-function shutdown(signal) {
+async function shutdown(signal) {
   console.log('Shutting down from signal: ', signal);
-  ddb.cleanUpNodesData(nodeId).then(() => {
-    console.log('Closing server...');
+  try {
+    await ddb.cleanUpNodesData(nodeId);
     server.close(() => {
       console.log('Server closed');
       return;
     })
-  }).catch((error) => {
+  }
+  catch(error) {
     console.error('An unexpected error occured while cleaning up application nodes data: ', error);
     console.log('Closing server...');
     server.close(() => {
       console.log('Server closed');
       return;
     }) 
-  });
+  }  
 }
 
 // **********************
@@ -87,21 +98,8 @@ function shutdown(signal) {
 // **********************
 app.get("/", async (req, res, next) => {
   console.debug('Processing a GET request on / from host '+req.headers['host']);
-
-  // Load all application nodes data from DynamoDB
-  ddb.getAllNodesData().then((nodesData) => {
-
-    // Build page content
-    res.send(getHTMLContent(nodesData, nodeId));
-
-    // Updater our counters and save new value
-    mainPageHitCounter+=1;
-    
-    ddb.updateNodeData(nodeId, mainPageHitCounter, healthCheckHitCounter);
-  }).catch((error) => {
-    console.error('An error occured while loading application nodes data from DynamoDB: ', error);
-    res.send('An error occured while loading application nodes data from DynamoDB: '+ error.toString());
-  })
+  const content = await generateHomePage(res);
+  res.send(content);
 });
 
 // *****************************************
@@ -110,31 +108,49 @@ app.get("/", async (req, res, next) => {
 // *****************************************
 app.get("/healthcheck", async (req, res, next) => {
   console.debug('Processing a GET request on /healthcheck from host '+req.headers['host']);
-  res.send("OK");
-  healthCheckHitCounter+=1;
-  ddb.updateNodeData(nodeId, mainPageHitCounter, healthCheckHitCounter).catch((error) => {
+  try {
+    healthCheckHitCounter+=1;
+    await ddb.updateNodeData(nodeId, mainPageHitCounter, healthCheckHitCounter);
+    res.send("OK");
+  }
+  catch(error) {
     console.error('Unable to update application nodes data in DyamoDB', error);
-  });
+    res.send("NOK");
+  }
 });
+
+// ***************************
+// Generate home page content
+// ***************************
+async function generateHomePage() {
+  try {
+    // Update our counters and save new value
+    mainPageHitCounter+=1;
+    await ddb.updateNodeData(nodeId, mainPageHitCounter, healthCheckHitCounter);
+
+    // Load all application nodes data from DynamoDB
+    const nodesData = await ddb.getAllNodesData();
+
+    // Build page content
+    return getHTMLContent(nodesData, nodeId);
+  }
+  catch(error) {
+    console.error('An error occured while loading application nodes data from DynamoDB: ', error);
+    return ('<p>An error occured while loading application nodes data from DynamoDB: '+ error.toString()+'</p>');
+  }
+}
 
 // *****************************************
 // Returns the HTML content of the main page
 // *****************************************
 function getHTMLContent(nodes, nodeId) {
-  
   const dateLocaleOptions = {weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric', second: 'numeric', hour12: false, timeZoneName: 'short'};
 
-  let htmlContent = `<head><style>${getCSSString()}</style></head>`;
-  htmlContent = htmlContent + '<body>';
-  htmlContent = htmlContent + '<div style="display: inline-block; text-align: center; padding: 20px;"><h1>Greetings from Cluster Sample App!</h1>';
-  htmlContent = htmlContent + `<h3>Today is ${new Date().toLocaleString('en-US', dateLocaleOptions)}`+'</h3>';
-  htmlContent = htmlContent + `<p>This application node has been hit ${mainPageHitCounter} time(s)</p>`;
-  htmlContent = htmlContent + `<p>The healthcheck of this application node has been hit ${healthCheckHitCounter} time(s)</p>`;
-
-  htmlContent = htmlContent + `<div><p>This application cluster is made of ${nodes.length} nodes with the following properties:`;
-  htmlContent = htmlContent + '<table text-align: center; border-style: solid;><th>Application Node ID</th><th>#Page Hit</th><th>#Health Check Hit</th><th>IP Addresses</th>';
-  htmlContent = htmlContent + getAppNodeHTMLString(nodes);
-  htmlContent = htmlContent + '</table></p></div></body>';
+  let htmlContent = homePageTemplate.replace('$TodayDate', new Date().toLocaleString('en-US', dateLocaleOptions));
+  htmlContent = htmlContent.replace('$mainPageHitCounter', mainPageHitCounter);
+  htmlContent = htmlContent.replace('$healthCheckHitCounter', healthCheckHitCounter);
+  htmlContent = htmlContent.replace('$nodes', nodes.length);
+  htmlContent = htmlContent.replace('$tableLines', getAppNodeHTMLString(nodes));
 
   return htmlContent;
 }
@@ -165,16 +181,6 @@ function getAppNodeHTMLString(nodes) {
   return htmlContent;
 }
 
-// Returns the CSS style used on main page
-function getCSSString() {
-  let css = 'body { text-align: center; font-family:verdana; font-size:12px}';
-  css = css + 'table { width: 98%; border: 1px solid black; }';
-  css = css + 'th { background-color: #f7a105; color: white; font-family:verdana; font-size:12px}';
-  css = css + 'th, td { border: 1px; padding: 3px; text-align: center; }';
-  css = css + 'tr:nth-child(even) {background-color: #f2f2f2;}';
-  return css;
-}
-
 // ***************************************************
 // Computes a list of IPv4 addresses seen from the app
 // ***************************************************
@@ -196,4 +202,4 @@ function getAllIPAddrs() {
 
 }
 
-module.exports = server ;
+module.exports = server;

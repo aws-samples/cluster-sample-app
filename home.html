@@ -1,0 +1,46 @@
+<head>
+    <style>
+body { 
+    text-align: center;
+    font-family:verdana;
+    font-size:12px
+}
+
+table { 
+    width: 98%; 
+    border: 1px solid black;
+}
+
+th {
+    background-color: #f7a105;
+    color: white; 
+    font-family:verdana; 
+    font-size:12px
+}
+
+th, td {
+    border: 1px; 
+    padding: 3px; 
+    text-align: center;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+    </style>
+</head>
+<body>
+    <div style="display: inline-block; text-align: center; padding: 20px;">
+        <h1>Greetings from Cluster Sample App!</h1>
+        <h3>Today is $TodayDate</h3>
+        <p>This application node has been hit $mainPageHitCounter time(s)</p>
+        <p>The healthcheck of this application node has been hit $healthCheckHitCounter time(s)</p>
+        <div>
+            <p>This application cluster is made of $nodes nodes with the following properties:
+            <table text-align: center; border-style: solid;><th>Application Node ID</th><th>#Page Hit</th><th>#Health Check Hit</th><th>IP Addresses</th>
+                $tableLines
+            </table>
+            </p>
+        </div>
+    </div>
+</body>

@@ -30,6 +30,8 @@ describe('Testing sample app', () => {
     server.close();
   });
 
+  // Better to call the function for this (not go externally through http GET)
+
   it('Testing default page', (done) => {
     chai.request(server)
         .get('/')

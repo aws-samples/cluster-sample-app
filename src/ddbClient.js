@@ -23,121 +23,95 @@ function init(awsFactory) {
 }
 
 async function saveNodeData(nodeId, ipv4Addrs, mainPageHitCounter, healthCheckHitCounter) {
-    return new Promise(function(resolve, reject) {
-        
-        const params = {
-            TableName: 'CLUSTER_SAMPLE_APP_NODE',
-            Item: {
-                'NODE_ID' : nodeId.toString(),
-                'IP_ADDRS' : JSON.stringify(ipv4Addrs),
-                'PAGE_HIT_COUNT': mainPageHitCounter.toString(),
-                'HEALTHCHECK_HIT_COUNT': healthCheckHitCounter.toString(),
-            }
-        };
+    const params = {
+        TableName: 'CLUSTER_SAMPLE_APP_NODE',
+        Item: {
+            'NODE_ID' : nodeId.toString(),
+            'IP_ADDRS' : JSON.stringify(ipv4Addrs),
+            'PAGE_HIT_COUNT': mainPageHitCounter.toString(),
+            'HEALTHCHECK_HIT_COUNT': healthCheckHitCounter.toString(),
+        }
+    };
 
-        // Just for the tests
-        if(process.env.NODE_ENV === 'development') {
-            resolve({});
-        }
-        else {
-            ddbClient.put(params, function(err, data) {
-                if (err) {
-                    console.error("Unable to insert application data: ", err);
-                    reject(err);
-                } else {
-                    console.log("Application data successfully inserted in DynamoDB");
-                    resolve(data);
-                }
-            });    
-        }
-    });
+    // Just for the tests
+    if(process.env.NODE_ENV === 'development') {
+        return;
+    }
+    try {
+        await ddbClient.put(params).promise();
+    }
+    catch(error) {
+        console.error("Unable to insert application data: ", error);
+    }
 }
 
 async function cleanUpNodesData(nodeId) {
-    return new Promise(function(resolve, reject) {
+    const params = {
+        TableName: 'CLUSTER_SAMPLE_APP_NODE',
+        Key: {
+            'NODE_ID' : nodeId.toString()
+        }
+    };
 
-        const params = {
-            TableName: 'CLUSTER_SAMPLE_APP_NODE',
-            Key: {
-                'NODE_ID' : nodeId.toString()
-            }
-        };
-    
-        // Just for the tests
-        if(process.env.NODE_ENV === 'development') {
-            resolve({});
-        }
-        else {
-            ddbClient.delete(params, function(err, data) {
-                if (err) {
-                    console.error("Unable to delete application node data: ", err);
-                    reject(err);
-                } else {
-                    console.log("Successfully deleted application node data");
-                    resolve(data);
-                }
-            });    
-        }
-    });
+    // Just for the tests
+    if(process.env.NODE_ENV === 'development') {
+        return;
+    }
+    try {
+        return await ddbClient.delete(params).promise();
+    }
+    catch(error) {
+        console.error("Unable to delete application node data: ", error);
+    }
 }
 
 async function getAllNodesData(nodeId) {
-    return new Promise(function(resolve, reject) {
+    const params = {
+        ExpressionAttributeValues: {
+            ':nodeid': {S: '1'}
+        },
+        FilterExpression: "NODE_ID <> :nodeid",
+        TableName: 'CLUSTER_SAMPLE_APP_NODE'
+        };
+    
+    // Just for the tests
+    if(process.env.NODE_ENV === 'development') {
+        return [];
+    }
 
-        let params = {
-            ExpressionAttributeValues: {
-              ':nodeid': {S: '1'}
-            },
-            FilterExpression: "NODE_ID <> :nodeid",
-            TableName: 'CLUSTER_SAMPLE_APP_NODE'
-          };
-        
-        // Just for the tests
-        if(process.env.NODE_ENV === 'development') {
-            resolve([]);
-        }
-        else {
-            ddbClient.scan(params, function(err, data) {
-                if (err) {
-                    console.error("Unable to get all node data: ", err);
-                    reject(err);
-                } else {
-                    resolve(data.Items);
-                }
-            });    
-        }
-    });
+    try {
+        const res = await ddbClient.scan(params).promise();
+        return res.Items;        
+    }
+    catch(error) {
+        console.error("Unable to get all node data: ", error);
+        throw error;
+    }
 }
 
 async function updateNodeData(nodeId, mainPageHitCounter, healthCheckHitCounter) {
-    return new Promise(function(resolve, reject) {
-        
-        const params = {
-            TableName: 'CLUSTER_SAMPLE_APP_NODE',
-            Key: { 'NODE_ID' : nodeId.toString() },
-            UpdateExpression: 'set PAGE_HIT_COUNT = :pageHit, HEALTHCHECK_HIT_COUNT = :healthHit',
-            ExpressionAttributeValues: {
-                ':pageHit' : mainPageHitCounter.toString(),
-                ':healthHit' : healthCheckHitCounter.toString()
-            }
-        };
-    
-        // Just for the tests
-        if(process.env.NODE_ENV === 'development') {
-            resolve({});
+    const params = {
+        TableName: 'CLUSTER_SAMPLE_APP_NODE',
+        Key: { 'NODE_ID' : nodeId.toString() },
+        UpdateExpression: 'set PAGE_HIT_COUNT = :pageHit, HEALTHCHECK_HIT_COUNT = :healthHit',
+        ExpressionAttributeValues: {
+            ':pageHit' : mainPageHitCounter.toString(),
+            ':healthHit' : healthCheckHitCounter.toString()
         }
-        else {
-            ddbClient.update(params, function(err, data) {
-                if (err) {
-                    console.error("Unable to update application data: ", err);
-                    reject(err);
-                } else {
-                    console.log("Application data successfully updated in DynamoDB");
-                    resolve(data);
-                }
-            });    
-        }
-    });
+    };
+
+    // Just for the tests
+    if(process.env.NODE_ENV === 'development') {
+        return {};
+    }
+
+    try {
+        await ddbClient.update(params).promise();
+    }
+    catch(error) {
+        console.error("Unable to update node data: ", error);
+        throw error;
+    }
 }
 exports.init = init
 exports.saveNodeData = saveNodeData
