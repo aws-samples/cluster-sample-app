@@ -33,10 +33,6 @@ async function saveNodeData(nodeId, ipv4Addrs, mainPageHitCounter, healthCheckHi
         }
     };
 
-    // Just for the tests
-    if(process.env.NODE_ENV === 'development') {
-        return;
-    }
     try {
         await ddbClient.put(params).promise();
     }
@@ -53,12 +49,8 @@ async function cleanUpNodesData(nodeId) {
         }
     };
 
-    // Just for the tests
-    if(process.env.NODE_ENV === 'development') {
-        return;
-    }
     try {
-        return await ddbClient.delete(params).promise();
+        await ddbClient.delete(params).promise();
     }
     catch(error) {
         console.error("Unable to delete application node data: ", error);
@@ -74,11 +66,6 @@ async function getAllNodesData(nodeId) {
         TableName: 'CLUSTER_SAMPLE_APP_NODE'
         };
     
-    // Just for the tests
-    if(process.env.NODE_ENV === 'development') {
-        return [];
-    }
-
     try {
         const res = await ddbClient.scan(params).promise();
         return res.Items;        
@@ -99,11 +86,6 @@ async function updateNodeData(nodeId, mainPageHitCounter, healthCheckHitCounter)
             ':healthHit' : healthCheckHitCounter.toString()
         }
     };
-
-    // Just for the tests
-    if(process.env.NODE_ENV === 'development') {
-        return {};
-    }
 
     try {
         await ddbClient.update(params).promise();

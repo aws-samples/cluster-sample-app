@@ -79,7 +79,6 @@ async function shutdown(signal) {
     await ddb.cleanUpNodesData(nodeId);
     server.close(() => {
       console.log('Server closed');
-      return;
     })
   }
   catch(error) {
@@ -87,7 +86,6 @@ async function shutdown(signal) {
     console.log('Closing server...');
     server.close(() => {
       console.log('Server closed');
-      return;
     }) 
   }  
 }
@@ -98,7 +96,7 @@ async function shutdown(signal) {
 // **********************
 app.get("/", async (req, res, next) => {
   console.debug('Processing a GET request on / from host '+req.headers['host']);
-  const content = await generateHomePage(res);
+  const content = await generateHomePage();
   res.send(content);
 });
 
