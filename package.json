@@ -37,6 +37,6 @@
     "eks"
   ],
   "homepage": "https://github.com/jeanbaptisteguillois/cluster-sample-app/#readme",
-  "author": "Jean-Baptiste Guillois (AWS)",
-  "license": "MIT"
+  "author": "Amazon.com",
+  "license": "MIT-0"
 }
