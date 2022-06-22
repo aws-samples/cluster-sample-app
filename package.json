@@ -36,7 +36,7 @@
     "ecs",
     "eks"
   ],
-  "homepage": "https://github.com/jeanbaptisteguillois/cluster-sample-app/#readme",
+  "homepage": "https://github.com/aws-samples/cluster-sample-app/#readme",
   "author": "Amazon.com",
   "license": "MIT-0"
 }
