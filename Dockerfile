@@ -1,5 +1,5 @@
 ### Our base image
-FROM amazonlinux:2.0.20211223.0
+FROM amazonlinux:2
 
 ### Update our image
 RUN yum update -y && yum clean all
