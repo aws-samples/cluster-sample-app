@@ -5,7 +5,7 @@
   "main": "src/app.js",
   "dependencies": {
     "aws-sdk": "2.1058.0",
-    "express": "4.17.1",
+    "express": "4.17.3",
     "express-generator": "4.2.0",
     "npm": "^8.19.2"
   },
