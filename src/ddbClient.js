@@ -22,12 +22,13 @@ function init(awsFactory) {
     ddbClient = new awsFactory.DynamoDB.DocumentClient({apiVersion: '2012-08-10'});
 }
 
-async function saveNodeData(nodeId, ipv4Addrs, mainPageHitCounter, healthCheckHitCounter) {
+async function saveNodeData(nodeId, ipv4Addrs, az, mainPageHitCounter, healthCheckHitCounter) {
     const params = {
         TableName: 'CLUSTER_SAMPLE_APP_NODE',
         Item: {
             'NODE_ID' : nodeId.toString(),
             'IP_ADDRS' : JSON.stringify(ipv4Addrs),
+            'AZ': az.toString(),
             'PAGE_HIT_COUNT': mainPageHitCounter.toString(),
             'HEALTHCHECK_HIT_COUNT': healthCheckHitCounter.toString(),
         }

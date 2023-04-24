@@ -21,6 +21,7 @@ const fs = require('fs');
 const { networkInterfaces } = require('os');
 const awsFactory = require('aws-sdk');
 const ddb = require('./ddbClient.js');
+const request = require('request');
 
 let nodeId = undefined;
 let homePageTemplate = undefined;
@@ -55,13 +56,21 @@ let server = app.listen(applicationHttpPort, () => {
   // Set our node ID
   nodeId = Math.random().toString(16).slice(2);
 
-  // Store our own node data in DynamoDB
-  ddb.saveNodeData(nodeId, ipv4Addrs, mainPageHitCounter, healthCheckHitCounter).then(() => {
-    console.info("Cluster sample app started...");
-    console.info("Listening on port "+ applicationHttpPort);
-  }).catch((error) => {
-    console.error('Unable to initialize application: ', error);
-  });
+  request({url: process.env.ECS_CONTAINER_METADATA_URI_V4 + "/task", json: true}, function(err, res, json) {
+    if (err) {
+      throw err;
+    }
+    
+    az = json.AvailabilityZone
+    
+    // Store our own node data in DynamoDB
+    ddb.saveNodeData(nodeId, ipv4Addrs, az, mainPageHitCounter, healthCheckHitCounter).then(() => {
+      console.info("Cluster sample app started...");
+      console.info("Listening on port "+ applicationHttpPort);
+    }).catch((error) => {
+      console.error('Unable to initialize application: ', error);
+    });
+    });
 });
 
 // ****************************
@@ -166,9 +175,9 @@ function getAppNodeHTMLString(nodes) {
         ipAddrs = ipAddrs + `${ipaddr.infos.address}`+'<br/>'
       });
       if(node.NODE_ID === nodeId) {
-        htmlContent = htmlContent + `<tr style="background-color: #3fff00;"><td>${node.NODE_ID} (this node)</td><td>${node.PAGE_HIT_COUNT}</td><td>${node.HEALTHCHECK_HIT_COUNT}</td><td>${ipAddrs}</td></tr>`;
+        htmlContent = htmlContent + `<tr style="background-color: #3fff00;"><td>${node.NODE_ID} (this node)</td><td>${node.PAGE_HIT_COUNT}</td><td>${node.HEALTHCHECK_HIT_COUNT}</td><td>${ipAddrs}</td><td>${node.AZ}</td></tr>`;
       } else {
-        htmlContent = htmlContent + `<tr><td>${node.NODE_ID}</td><td>${node.PAGE_HIT_COUNT}</td><td>${node.HEALTHCHECK_HIT_COUNT}</td><td>${ipAddrs}</td></tr>`;  
+        htmlContent = htmlContent + `<tr><td>${node.NODE_ID}</td><td>${node.PAGE_HIT_COUNT}</td><td>${node.HEALTHCHECK_HIT_COUNT}</td><td>${ipAddrs}</td><td>${node.AZ}</td></tr>`;  
       }
     });
   }
